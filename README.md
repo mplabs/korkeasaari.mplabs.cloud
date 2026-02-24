@@ -43,43 +43,42 @@ npm run preview
 
 ## Docker
 
+The vacation dates are configured via **environment variables** at container start — no rebuild needed.
+
+| Variable | Default | Description |
+|---|---|---|
+| `LAST_VISIT` | `2025-07-12` | Date of the last visit |
+| `NEXT_VISIT` | `2026-07-11` | Date of the next visit |
+| `DESTINATION` | `Korkeasaari` | Name shown in the header |
+
 ### With docker compose
 
-Edit the build args in `docker-compose.yml`, then:
-
 ```sh
-docker compose up -d --build
+docker compose up -d
 ```
 
-The site will be available on port `8080`.
+Edit the `environment` section in `docker-compose.yml` to change the dates. Restart the container to apply.
 
-### With docker build
+### With docker run
 
 ```sh
-docker build \
-  --build-arg VITE_LAST_VISIT=2025-07-12 \
-  --build-arg VITE_NEXT_VISIT=2026-07-11 \
-  --build-arg VITE_DESTINATION=Korkeasaari \
-  -t island-timer .
-
-docker run -d -p 8080:80 island-timer
+docker run -d -p 8080:80 \
+  -e LAST_VISIT=2025-07-12 \
+  -e NEXT_VISIT=2026-07-11 \
+  -e DESTINATION=Korkeasaari \
+  ghcr.io/mplabs/korkeasaari.mplabs.cloud:latest
 ```
 
-To update the dates, rebuild the image with new `--build-arg` values.
+### Build locally
+
+```sh
+docker build -t island-timer .
+docker run -d -p 8080:80 -e LAST_VISIT=2025-07-12 island-timer
+```
 
 ## CI/CD
 
 A GitHub Actions workflow builds and pushes the image to `ghcr.io` on every push to `main`. It can also be triggered manually via `workflow_dispatch`.
-
-The vacation dates are read from **GitHub repository variables** (Settings > Variables > Actions). If not set, the defaults from `.env.example` are used.
-
-| Variable | Default |
-|---|---|
-| `VITE_LAST_VISIT` | `2025-07-12` |
-| `VITE_NEXT_VISIT` | `2026-07-11` |
-| `VITE_DESTINATION` | `Korkeasaari` |
-
-To pull the image on your server:
 
 ```sh
 docker pull ghcr.io/mplabs/korkeasaari.mplabs.cloud:latest

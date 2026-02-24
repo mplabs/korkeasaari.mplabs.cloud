@@ -1,10 +1,9 @@
 services:
   web:
-    build:
-      context: .
-      args:
-        VITE_LAST_VISIT: "2025-07-12"
-        VITE_NEXT_VISIT: "2026-07-11"
-        VITE_DESTINATION: "Korkeasaari"
+    build: .
+    environment:
+      LAST_VISIT: "2025-07-12"
+      NEXT_VISIT: "2026-07-11"
+      DESTINATION: "Korkeasaari"
     ports:
       - "8080:80"

@@ -40,7 +40,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            VITE_LAST_VISIT=${{ vars.VITE_LAST_VISIT || '2025-07-12' }}
-            VITE_NEXT_VISIT=${{ vars.VITE_NEXT_VISIT || '2026-07-11' }}
-            VITE_DESTINATION=${{ vars.VITE_DESTINATION || 'Korkeasaari' }}

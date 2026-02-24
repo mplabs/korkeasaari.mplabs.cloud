@@ -1,9 +1,5 @@
 import './style.css';
 
-const LAST_VISIT = new Date(import.meta.env.VITE_LAST_VISIT);
-const NEXT_VISIT = new Date(import.meta.env.VITE_NEXT_VISIT);
-const DESTINATION = import.meta.env.VITE_DESTINATION ?? 'Korkeasaari';
-
 function daysBetween(a, b) {
   return Math.floor((b.getTime() - a.getTime()) / 86_400_000);
 }
@@ -31,27 +27,49 @@ function createStars() {
   }
 }
 
-function update() {
+function update(config) {
+  const lastVisit = new Date(config.lastVisit);
+  const nextVisit = new Date(config.nextVisit);
+  const destination = config.destination ?? 'Korkeasaari';
+
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  const since = daysBetween(LAST_VISIT, today);
-  const until = daysBetween(today, NEXT_VISIT);
-  const total = daysBetween(LAST_VISIT, NEXT_VISIT);
+  const since = daysBetween(lastVisit, today);
+  const until = daysBetween(today, nextVisit);
+  const total = daysBetween(lastVisit, nextVisit);
   const pct = Math.min(100, Math.max(0, (since / total) * 100));
 
-  document.getElementById('destination').textContent = DESTINATION;
+  document.getElementById('destination').textContent = destination;
   document.getElementById('days-since').textContent = since;
   document.getElementById('days-until').textContent = Math.max(0, until);
-  document.getElementById('last-date').textContent = formatDate(LAST_VISIT);
-  document.getElementById('next-date').textContent = formatDate(NEXT_VISIT);
-  document.getElementById('progress-start').textContent = formatDate(LAST_VISIT);
-  document.getElementById('progress-end').textContent = formatDate(NEXT_VISIT);
+  document.getElementById('last-date').textContent = formatDate(lastVisit);
+  document.getElementById('next-date').textContent = formatDate(nextVisit);
+  document.getElementById('progress-start').textContent = formatDate(lastVisit);
+  document.getElementById('progress-end').textContent = formatDate(nextVisit);
   document.getElementById('progress-fill').style.width = `${pct.toFixed(1)}%`;
   document.getElementById('progress-percent').textContent =
     `${pct.toFixed(1)}% of the wait complete`;
 }
 
-createStars();
-update();
-setInterval(update, 60_000);
+async function loadConfig() {
+  try {
+    const res = await fetch('./config.json');
+    if (res.ok) return await res.json();
+  } catch { /* fall through to defaults */ }
+
+  return {
+    lastVisit: import.meta.env.VITE_LAST_VISIT,
+    nextVisit: import.meta.env.VITE_NEXT_VISIT,
+    destination: import.meta.env.VITE_DESTINATION,
+  };
+}
+
+async function init() {
+  createStars();
+  const config = await loadConfig();
+  update(config);
+  setInterval(() => update(config), 60_000);
+}
+
+init();
