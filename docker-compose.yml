@@ -7,7 +7,7 @@ services:
       DESTINATION: "Korkeasaari"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.korkeasaari.rule=Host(`korkeasaari.mplabs.cloud`)"
+      - traefik.http.routers.korkeasaari.rule=Host(`korkeasaari.mplabs.cloud`)
       - "traefik.http.routers.korkeasaari.entrypoints=websecure"
       - "traefik.http.routers.korkeasaari.tls.certresolver=letsencrypt"
       - "traefik.http.services.korkeasaari.loadbalancer.server.port=80"
