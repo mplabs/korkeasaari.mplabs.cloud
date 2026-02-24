@@ -1,0 +1,8 @@
+{
+  "name": "Korkeasaari Island Timer",
+  "short_name": "Korkeasaari",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a2342",
+  "theme_color": "#0a2342"
+}
