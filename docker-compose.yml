@@ -1,9 +1,19 @@
 services:
   web:
-    build: .
+    image: ghcr.io/mplabs/korkeasaari.mplabs.cloud:latest
     environment:
-      LAST_VISIT: "2025-07-12"
-      NEXT_VISIT: "2026-07-11"
+      LAST_VISIT: "2025-08-08"
+      NEXT_VISIT: "2026-07-17"
       DESTINATION: "Korkeasaari"
-    ports:
-      - "8080:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.korkeasaari.rule=Host(`korkeasaari.mplabs.cloud`)"
+      - "traefik.http.routers.korkeasaari.entrypoints=websecure"
+      - "traefik.http.routers.korkeasaari.tls.certresolver=letsencrypt"
+      - "traefik.http.services.korkeasaari.loadbalancer.server.port=80"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
