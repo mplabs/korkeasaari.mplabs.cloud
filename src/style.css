@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ocean-deep: #0a2342;
+  --color-ocean: #1b4965;
+  --color-ocean-light: #5fa8d3;
+  --color-sand: #f4e4ba;
+  --color-sand-dark: #d4a857;
+  --color-sunset: #e8856c;
+  --color-sunset-bright: #f0a868;
+}
+
+@keyframes wave {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-5%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.8; }
+}
+
+@utility animate-wave-slow {
+  animation: wave 8s linear infinite;
+}
+
+@utility animate-wave-slower {
+  animation: wave 12s linear infinite reverse;
+}
+
+@utility animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
